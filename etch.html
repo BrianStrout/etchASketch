@@ -38,6 +38,7 @@
             flex-direction: column;
             justify-content: first baseline;
             align-items: center;
+            gap: 4px;
 
         }
         button{
@@ -45,10 +46,20 @@
             color: var(--laser);
             border-color: var(--laser);
             border-radius: 40px;
-            width: 100px;
+            width: 80px;
             )
         }
+        .knobSlot{
+            display: flex;
+            justify-content: space-between;
+            gap: 5px;
+            
+        }
+        .knobs{
+            width: 20px;
+        }
         .grid{
+            display: grid;
             width: 500px;
             height:500px;
             text-align: center;
@@ -59,6 +70,11 @@
         }
         .userGrdSize{
             width: 100px;
+            background-color: var(--backtone);
+            
+        }
+        .userGrdSize.input[type="text"], textarea {
+        background-color : #d1d1d1; 
         }
 </style>
 <body>   <header class = "header"><h1>Etch Time</h1></header>
@@ -69,7 +85,11 @@
                     <button id = "eraseButton">erase</button>
                     <button id = "resetButton">reset</button>
                     <input  id = "colorSwatch" type="color" value= "#18D100";>
-                    <input  id = "userGrdSize" type = "text" value = "16">
+                        <div class = "knobSlot">
+                        <input  id = "userGrdSize" type = "text" value = "16" size="2">
+                        <button id = "up" class = "knobs"> ^ </button>
+                        <button id = "down" class = "knobs"> v </button>
+                        </div>
         </div>
         <div id="grid" class = "grid">
             <!--grid generation-->
@@ -90,8 +110,9 @@ const rando = document.getElementById('randoButton');
 const erase = document.getElementById('eraseButton');
 const reset = document.getElementById('resetButton');
 const gSize = document.getElementById('userGrdSize').value;
-
-
+let ink = false;
+    document.body.onmousedown = () => ink = true;
+    document.body.onmouseup = () => ink = false;
 
 function updateGridSize(newSize){
         curGridSize = newSize;
@@ -116,14 +137,15 @@ const grid = document.getElementById('grid');
 
 //grid generation function
 function generateGrid(size){
-    console.log(grid);
+    console.log("size is" + size);
         grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
         grid.style.gridTemplateRows = `repeat(${size}, 1fr)`;
-    for(i=0; i<size;i++){
+   
+        for(i=0; i<size**2; i++){
    
     const cell = document.createElement('div');
     cell.classList.add('cells');
-    cell.innerHTML = `${i + 1}`;
+    //cell.innerHTML = `${i + 1}`;
     cell.setAttribute(`id`, `div${i}`);
     cell.style.backgroundColor = "red";
     cell.addEventListener('mouseover', draw);
@@ -133,7 +155,12 @@ function generateGrid(size){
 
 
 }
-function draw(){
+function draw(e){
+    if(e.type === 'mouseover' && !ink){
+        console.log("no ink");   
+        return;
+    }
+
     console.log("draw function active");
 }
 //way to adjust the desired grid
