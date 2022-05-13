@@ -4,154 +4,162 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etch-A-Sketch</title>
-                                                <!--STYLES-->
-<style>
-  :root{/*establishes color variables*/
-            --base-dark: #1100ff;
-            --base-light: rgb(5, 193, 255);
-            --sec-light: #ffe19b;
-        }
-
-        *,/*selects all elements*/
-        *::before,/*selects all psuedo classes of before*/
-        /*selects all psuedo classes of all*/
-        *::after {
-        box-sizing: border-box;
-        padding: 0;
-        margin: 0;
-        } 
-
-    .header{
-        justify-content: center;
-        text-align: center;
-    }
-.container{
-display: flex;
-align-items: flex-start;
-justify-content: center;
-gap: 100px;  
-background-color: var(--base-dark);
-margin-left: 10vh;
-margin-right: 10vh;
-
-}
-.controller{
-    margin-top: 40px;
-    position: static;
-    display: flex;
-    flex-direction: column;
-    background-color: aqua;
-    gap: 10px;
-    justify-content: center;
-    text-align: center  ;
-}
-button{
-    border-radius: 40;
-    border-color: var(--base-light);
-    height: 30px;
-
-}
-.grid{
-    display: grid;
-    margin: 40px;
-    background-color: darkgoldenrod;
-    width: 500px;
-    height: 500px;
-    box-shadow: rgba(57, 41, 121, 0.622) 5px 5px 5px;;
-}
-
-</style>
-                                                <!--END OF STYLES-->
+    <title>Document</title>
 </head>
-<body>
-    <header class = "header"><h1 id ="title">Etch-A-Sketch</h1></header>
-    <div class = "container">
-        <div class ="controller">
-            <button id="userBut">User</button>
-            <button id="rndmBut">Rndm</button>
-            <button id="ersrBut">Ersr</button>
-            <button id="rsetBut">Rset</button>
-            <input id="swatch" type="color" value="#000000" />
-            <div id="gridSize" class="gridSize">16 ^ 2</div>
-            <input id="slider" type="range" value="16" min="1" max="64"/>
+<style>
+        :root{
+           --backtone: #494949;
+           --laser: #18d100;
+           --whitelight: #fbfeef;
+        }
+        
+        *,
+        *::before,
+        *::after{
+            padding: 0;
+            margin:0;
+            box-sizing: border-box;
+        }
+        .header{
+            text-align: center;
+            margin: 20 px;
+            background-color: var(--backtone);
+        }
+        .display{
+            background-color: var(--backtone);
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10%;
+            padding: 10px;
+        }
+        .controller{
+            display: flex;
+            flex-direction: column;
+            justify-content: first baseline;
+            align-items: center;
+
+        }
+        button{
+            background-color: var(--whitelight);
+            color: var(--laser);
+            border-color: var(--laser);
+            border-radius: 40px;
+            width: 100px;
+            )
+        }
+        .grid{
+            width: 500px;
+            height:500px;
+            text-align: center;
+            background-color: var(--whitelight);
+        }
+        .colorSwatch{
+            width: 100px;
+        }
+        .userGrdSize{
+            width: 100px;
+        }
+</style>
+<body>   <header class = "header"><h1>Etch Time</h1></header>
+        <div class = "display">   
+        <div class = "controller">
+                    <button id = "solidButton">solid</button>
+                    <button id = "randoButton">rando</button>
+                    <button id = "eraseButton">erase</button>
+                    <button id = "resetButton">reset</button>
+                    <input  id = "colorSwatch" type="color" value= "#18D100";>
+                    <input  id = "userGrdSize" type = "text" value = "16">
         </div>
-        <div class = "grid" id='grid'>      
-                                               <!--grid spawns here-->
+        <div id="grid" class = "grid">
+            <!--grid generation-->
+           
         </div>
-    </div>
+        </div>
 </body>
 <script>
-//setting inital values and assigning them
-const INITCOLO = '#000000';
-const INITSIZE = 16;
-const INITMODE = 'user';
-let currentColor = INITCOLO;
-let currentSize = INITSIZE;
-let currentMode = INITMODE;
-//MAKE UPDATE FUNCTIONS FOR COLOR SIZE AND MODE
+
+const LOADGRIDSIZE = 16;
+const LOADCELCOLOR = '#18D100';
+const LOADDRAWMODE = 'solid';
+let curGridSize = LOADGRIDSIZE;
+let curCellColor= LOADCELCOLOR;
+let curDrawMode = LOADDRAWMODE;
+const solid = document.getElementById('solidButton');
+const rando = document.getElementById('randoButton');
+const erase = document.getElementById('eraseButton');
+const reset = document.getElementById('resetButton');
+const gSize = document.getElementById('userGrdSize').value;
 
 
 
-function updateColor(newC){
-currentColor = newC;
-}
-function updateSize(newS){
-currentSize = newS;
-}
-function updateMode(newM){
-currentMode = newM;
-}
+function updateGridSize(newSize){
+        curGridSize = newSize;
+        
+        }
+function updateCellColor(newColor){    
+        curCellColor= newColor;
+        }
+function updateDrawMode(newMode){
+        curDrawMode = newMode;
+        console.log(`Mode update to ${newMode}`)
+        }
+
+solidButton.onclick = () => updateDrawMode('solid');
+randoButton.onclick = () => updateDrawMode('rando');
+eraseButton.onclick = () => updateDrawMode('erase');
+resetButton.onclick = () => resetGrid();
+
+const grid = document.getElementById('grid');
 
 
-//ESTABLISH VARIABLES FOR JSINTERACTION
 
-const userBut = document.getElementById('userBut');
-const rndmBut = document.getElementById('rndmBut');
-const ersrBut = document.getElementById('ersrBut');
-const rsetBut = document.getElementById('rsetBut');
-const sizeVal = document.getElementById('sizeVal');
-const sizeSli = document.getElementById('sizeSli');
-
-//arrow functions code for updating controller
-//update color
-swatch.onchange = (e) => updateColor(e.target.value);
-//update mode through microfunctions
-userBut.onclick = () => updateMode('user')
-rndmBut.onclick = () => updateMode ('rain')
-ersrBut.onclick = () => updateMode ('erase')
-//reset
-rsetBut.onclick = () => document.location.reload(true);
-
-//update slider here
-slider.onmousemove = (e) => updateSize(e.target.value);
-
-///////
-
-function setupGrid(size) {
-  grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`
-  grid.style.gridTemplateRows = `repeat(${size}, 1fr)`
-
-  for (let i = 0; i < size * size; i++) {
-
-   // console .log(i);
-        var gridOutLine = document.getElementById("grid");
-        var cell = document.createElement("div");
-        cell.innerHTML = `${i + 1}`;
-        cell.classList.add("divSquare");
-        cell.setAttribute(`id`, `div${i}`);
-        gridOutLine.appendChild(cell);
-
-
-  }
+//grid generation function
+function generateGrid(size){
+    console.log(grid);
+        grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+        grid.style.gridTemplateRows = `repeat(${size}, 1fr)`;
+    for(i=0; i<size;i++){
+   
+    const cell = document.createElement('div');
+    cell.classList.add('cells');
+    cell.innerHTML = `${i + 1}`;
+    cell.setAttribute(`id`, `div${i}`);
+    cell.style.backgroundColor = "red";
+    cell.addEventListener('mouseover', draw);
+    cell.addEventListener('mousedown', draw)
+    grid.appendChild(cell);
 }
 
 
-
-window.onload = () => {
-  setupGrid(INITSIZE)
-  <console.log("loaded window");
-  console.log(INITSIZE);
 }
+function draw(){
+    console.log("draw function active");
+}
+//way to adjust the desired grid
+
+//reset the grid function
+function resetGrid(){
+
+console.log('reset');
+}
+
+
+window.onload=()=>{
+    console.log("loading");
+    generateGrid(curGridSize);
+    console.log("loaded");
+}
+
+
+
+
+
+
+
+
 </script>
+
+
+
 </html>
