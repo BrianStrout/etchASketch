@@ -9,6 +9,7 @@
 <style>
         :root{
            --backtone: #494949;
+           --screen:#7b7878;
            --laser: #18d100;
            --whitelight: #fbfeef;
         }
@@ -41,6 +42,19 @@
             gap: 4px;
 
         }
+        .hideable{
+            display: flex;
+            flex-direction: column;
+            justify-content: first baseline;
+            align-items: center;
+            gap: 4px;
+            /* overflow: hidden;
+            max-height: 0px;
+            /* transition: max-height 0.2s; */
+        } 
+
+
+
         button{
             background-color: var(--whitelight);
             color: var(--laser);
@@ -48,6 +62,10 @@
             border-radius: 40px;
             width: 80px;
             )
+        }
+        #powerButton{
+            height: 80px;
+            border-radius: 8px;
         }
         .knobSlot{
             display: flex;
@@ -63,7 +81,33 @@
             width: 500px;
             height:500px;
             text-align: center;
-            background-color: var(--whitelight);
+            background-color: var(--screen);
+            border-style: solid;
+            border-color: var(--whitelight);
+            border-width: 2px;
+            box-shadow:
+                    inset 0 0 50px #fff,      /* inner white */
+                    inset 20px 0 80px #f0f,   /* inner left magenta short */
+                    inset -20px 0 80px #0ff,  /* inner right cyan short */
+                    inset 20px 0 300px #f0f,  /* inner left magenta broad */
+                    inset -20px 0 300px #0ff, /* inner right cyan broad */
+                    0 0 50px #fff,            /* outer white */
+                    -10px 0 80px #f0f,        /* outer left magenta */
+                    10px 0 80px #0ff;         /* outer right cyan */    
+
+
+
+        }
+        .glow{
+            box-shadow:
+                    inset 0 0 50px #fff,      /* inner white */
+                    inset 20px 0 80px #f0f,   /* inner left magenta short */
+                    inset -20px 0 80px #0ff,  /* inner right cyan short */
+                    inset 20px 0 300px #f0f,  /* inner left magenta broad */
+                    inset -20px 0 300px #0ff, /* inner right cyan broad */
+                    0 0 50px #fff,            /* outer white */
+                    -10px 0 80px #f0f,        /* outer left magenta */
+    
         }
         .colorSwatch{
             width: 100px;
@@ -80,6 +124,8 @@
 <body>   <header class = "header"><h1>Etch Time</h1></header>
         <div class = "display">   
         <div class = "controller">
+                    <button id = "powerButton">POWER</button>
+        <div class = "hideable">
                     <button id = "solidButton">solid</button>
                     <button id = "randoButton">rando</button>
                     <button id = "eraseButton">erase</button>
@@ -90,7 +136,7 @@
                         <button id = "up" class = "knobs"> ^ </button>
                         <button id = "down" class = "knobs"> v </button>
                         </div>
-        </div>
+        </div></div>
         <div id="grid" class = "grid">
             <!--grid generation-->
            
@@ -105,6 +151,8 @@ const LOADDRAWMODE = 'solid';
 let curGridSize = LOADGRIDSIZE;
 let curCellColor= LOADCELCOLOR;
 let curDrawMode = LOADDRAWMODE;
+const power = document.getElementById('powerButton');
+const hidden = document.querySelector('.hideable');
 const solid = document.getElementById('solidButton');
 const rando = document.getElementById('randoButton');
 const erase = document.getElementById('eraseButton');
@@ -113,6 +161,22 @@ const gSize = document.getElementById('userGrdSize').value;
 let ink = false;
     document.body.onmousedown = () => ink = true;
     document.body.onmouseup = () => ink = false;
+power.addEventListener('click', powerUp);
+
+function powerUp(){
+    console.log("powering up showing:");
+if( hidden.style.display === 'none'){
+    console.log('registered hit');
+    hidden.style.display = 'flex';
+}
+
+
+}
+
+
+
+
+
 
 function updateGridSize(newSize){
         curGridSize = newSize;
@@ -147,21 +211,48 @@ function generateGrid(size){
     cell.classList.add('cells');
     //cell.innerHTML = `${i + 1}`;
     cell.setAttribute(`id`, `div${i}`);
-    cell.style.backgroundColor = "red";
+    cell.setAttribute('class', "glow");
+    //cell.style.backgroundColor = "red";
     cell.addEventListener('mouseover', draw);
     cell.addEventListener('mousedown', draw)
     grid.appendChild(cell);
 }
-
-
 }
+function randomInteger(max) {
+    return Math.floor(Math.random()*(max + 1));
+}
+ 
+function generateRandom(){
+    let r = randomInteger(255);
+    let g = randomInteger(255);
+    let b = randomInteger(255);
+    let hr = r.toString(16).padStart(2, '0');
+    let hg = g.toString(16).padStart(2, '0');
+    let hb = b.toString(16).padStart(2, '0');
+ 
+    return "#" + hr + hg + hb;
+}
+
 function draw(e){
     if(e.type === 'mouseover' && !ink){
         console.log("no ink");   
         return;
     }
+    console.log(curDrawMode);
+    if (curDrawMode === 'solid'){
+        e.target.style.backgroundColor=curCellColor;
+    }else if(curDrawMode === 'rando'){
+        let rand= generateRandom();
+        console.log(rand);
+        const randomR = Math.floor(Math.random() * 256)
+    const randomG = Math.floor(Math.random() * 256)
+    const randomB = Math.floor(Math.random() * 256)
+    e.target.style.backgroundColor = `rgb(${randomR}, ${randomG}, ${randomB})`
 
-    console.log("draw function active");
+    }else if(curDrawMode === 'erase'){
+        e.target.style.backgroundColor="#7b7878";
+    }
+
 }
 //way to adjust the desired grid
 
