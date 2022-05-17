@@ -21,9 +21,14 @@
             margin:0;
             box-sizing: border-box;
         }
+        body{
+            background-color: var(--backtone);
+        }
+
         .header{
             text-align: center;
             margin: 20 px;
+            margin-top: 30px;
             background-color: var(--backtone);
         }
         .display{
@@ -156,10 +161,14 @@
                         <button id = "up" class = "knobs"> ^ </button>
                         <button id = "down" class = "knobs"> v </button>
                         </div>
-        </div></div>
+        </div>
+        
+    </div>
         <div id="grid" class = "grid">
             <!--grid generation-->
            
+        </div>
+        <div class="whatsNext"><p></p>
         </div>
         </div>
 </body>
@@ -236,6 +245,8 @@ function decreaseByOne(value){
                                                             // updates
 function updateGridSize(newSize){
         curGridSize = newSize;
+
+        resetGrid();
               
         }
 function updateCellColor(newColor){    
