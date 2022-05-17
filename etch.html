@@ -76,7 +76,38 @@
         .knobs{
             width: 20px;
         }
+
+
+
+        .hideable{
+            display: flex;
+            flex-direction: column;
+            justify-content: first baseline;
+            align-items: center;
+            gap: 4px;
+            opacity: 0;
+            /* overflow: hidden;
+            max-height: 0px;
+            /* transition: max-height 0.2s; */
+        } 
         .grid{
+            display: grid;
+            width: 500px;
+            height:500px;
+            text-align: center;
+            background-color: var(--screen);
+            border-style: solid;
+            border-color: var(--whitelight);
+            border-width: 2px;
+            transition: .25s;
+            /* box-shadow: */
+          
+               
+
+
+
+        }
+        .glow{
             display: grid;
             width: 500px;
             height:500px;
@@ -93,21 +124,8 @@
                     inset -20px 0 300px #0ff, /* inner right cyan broad */
                     0 0 50px #fff,            /* outer white */
                     -10px 0 80px #f0f,        /* outer left magenta */
-                    10px 0 80px #0ff;         /* outer right cyan */    
-
-
-
-        }
-        .glow{
-            box-shadow:
-                    inset 0 0 50px #fff,      /* inner white */
-                    inset 20px 0 80px #f0f,   /* inner left magenta short */
-                    inset -20px 0 80px #0ff,  /* inner right cyan short */
-                    inset 20px 0 300px #f0f,  /* inner left magenta broad */
-                    inset -20px 0 300px #0ff, /* inner right cyan broad */
-                    0 0 50px #fff,            /* outer white */
-                    -10px 0 80px #f0f,        /* outer left magenta */
-    
+                    10px 0 80px #0ff;         /* outer right cyan */   
+                    transition: 1s;
         }
         .colorSwatch{
             width: 100px;
@@ -120,7 +138,9 @@
         .userGrdSize.input[type="text"], textarea {
         background-color : #d1d1d1; 
         }
-</style>
+</style>                        
+                                                    <!-- HTML -->
+
 <body>   <header class = "header"><h1>Etch Time</h1></header>
         <div class = "display">   
         <div class = "controller">
@@ -158,29 +178,36 @@ const rando = document.getElementById('randoButton');
 const erase = document.getElementById('eraseButton');
 const reset = document.getElementById('resetButton');
 const gSize = document.getElementById('userGrdSize').value;
+const userC = document.getElementById('colorSwatch').value;
+
+
+
 let ink = false;
     document.body.onmousedown = () => ink = true;
     document.body.onmouseup = () => ink = false;
 power.addEventListener('click', powerUp);
 
+
+                                                            // POWER UP
 function powerUp(){
-    console.log("powering up showing:");
-if( hidden.style.display === 'none'){
-    console.log('registered hit');
-    hidden.style.display = 'flex';
+    if (grid.classList.contains('grid')) {
+        grid.setAttribute('class', "glow");
+    console.log("powering up");
+        hidden.style.opacity = 100;
+    }else{
+        grid.setAttribute('class', "grid");
+    console.log("powering down");
+    hidden.style.opacity = 0;
+    }
 }
 
 
-}
 
 
 
-
-
-
+                                                            // updates
 function updateGridSize(newSize){
-        curGridSize = newSize;
-        
+        curGridSize = newSize;      
         }
 function updateCellColor(newColor){    
         curCellColor= newColor;
@@ -194,7 +221,7 @@ solidButton.onclick = () => updateDrawMode('solid');
 randoButton.onclick = () => updateDrawMode('rando');
 eraseButton.onclick = () => updateDrawMode('erase');
 resetButton.onclick = () => resetGrid();
-
+colorSwatch.onchange = (e) => updateCellColor(e.target.value);
 const grid = document.getElementById('grid');
 
 
@@ -211,17 +238,21 @@ function generateGrid(size){
     cell.classList.add('cells');
     //cell.innerHTML = `${i + 1}`;
     cell.setAttribute(`id`, `div${i}`);
-    cell.setAttribute('class', "glow");
+    // cell.setAttribute('class', "glow");
     //cell.style.backgroundColor = "red";
     cell.addEventListener('mouseover', draw);
     cell.addEventListener('mousedown', draw)
     grid.appendChild(cell);
 }
 }
+
+
+
+//generatesrandom number
 function randomInteger(max) {
     return Math.floor(Math.random()*(max + 1));
 }
- 
+ //generatesrandom #color through random numbers
 function generateRandom(){
     let r = randomInteger(255);
     let g = randomInteger(255);
@@ -229,8 +260,7 @@ function generateRandom(){
     let hr = r.toString(16).padStart(2, '0');
     let hg = g.toString(16).padStart(2, '0');
     let hb = b.toString(16).padStart(2, '0');
- 
-    return "#" + hr + hg + hb;
+                            return "#" + hr + hg + hb;
 }
 
 function draw(e){
@@ -269,7 +299,7 @@ window.onload=()=>{
     console.log("loaded");
 }
 
-
+console.log(userC + "color loaded");
 
 
 
