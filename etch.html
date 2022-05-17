@@ -118,10 +118,10 @@
             border-width: 2px;
             box-shadow:
                     inset 0 0 50px #fff,      /* inner white */
-                    inset 20px 0 80px #f0f,   /* inner left magenta short */
-                    inset -20px 0 80px #0ff,  /* inner right cyan short */
-                    inset 20px 0 300px #f0f,  /* inner left magenta broad */
-                    inset -20px 0 300px #0ff, /* inner right cyan broad */
+                    /* inset 20px 0 80px #f0f,   inner left magenta short */
+                    /* inset -20px 0 80px #0ff,  inner right cyan short */
+                    /* inset 20px 0 300px #f0f,  inner left magenta broad */
+                    /* inset -20px 0 300px #0ff, inner right cyan broad */
                     0 0 50px #fff,            /* outer white */
                     -10px 0 80px #f0f,        /* outer left magenta */
                     10px 0 80px #0ff;         /* outer right cyan */   
@@ -177,15 +177,22 @@ const solid = document.getElementById('solidButton');
 const rando = document.getElementById('randoButton');
 const erase = document.getElementById('eraseButton');
 const reset = document.getElementById('resetButton');
-const gSize = document.getElementById('userGrdSize').value;
 const userC = document.getElementById('colorSwatch').value;
+let gSize = document.getElementById('userGrdSize').value;
+const upBut = document.getElementById('up');
+const dnBut = document.getElementById('down');
+
 
 
 
 let ink = false;
     document.body.onmousedown = () => ink = true;
     document.body.onmouseup = () => ink = false;
-power.addEventListener('click', powerUp);
+    power.addEventListener('click', powerUp);
+    upBut.onclick = () =>{increaseByOne(gSize); }
+    dnBut.onclick = () =>{decreaseByOne(gSize); }
+
+
 
 
                                                             // POWER UP
@@ -203,11 +210,33 @@ function powerUp(){
 
 
 
+function increaseByOne(value){
+        let valueN = parseInt(value);
+        let newValue = valueN + 1;
+        console.log("changed value from " + value + " to " + newValue );
+        gSize = newValue;
+        userGrdSize.setAttribute('value',newValue);
+        updateGridSize(newValue);
+        return;
+    }
 
 
+
+
+
+function decreaseByOne(value){
+    let valueN = parseInt(value);
+        let newValue = valueN - 1;
+        console.log("changed value from " + value + " to " + newValue );
+        gSize = newValue;
+        userGrdSize.setAttribute('value',newValue);
+        updateGridSize(newValue);
+        return;
+}
                                                             // updates
 function updateGridSize(newSize){
-        curGridSize = newSize;      
+        curGridSize = newSize;
+              
         }
 function updateCellColor(newColor){    
         curCellColor= newColor;
@@ -221,7 +250,7 @@ solidButton.onclick = () => updateDrawMode('solid');
 randoButton.onclick = () => updateDrawMode('rando');
 eraseButton.onclick = () => updateDrawMode('erase');
 resetButton.onclick = () => resetGrid();
-colorSwatch.onchange = (e) => updateCellColor(e.target.value);
+colorSwatch.onchange = (e) => updateCellColor(e.target.value);  
 const grid = document.getElementById('grid');
 
 
@@ -230,16 +259,12 @@ const grid = document.getElementById('grid');
 function generateGrid(size){
     console.log("size is" + size);
         grid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
-        grid.style.gridTemplateRows = `repeat(${size}, 1fr)`;
-   
+        grid.style.gridTemplateRows = `repeat(${size}, 1fr)`; 
         for(i=0; i<size**2; i++){
    
     const cell = document.createElement('div');
     cell.classList.add('cells');
-    //cell.innerHTML = `${i + 1}`;
     cell.setAttribute(`id`, `div${i}`);
-    // cell.setAttribute('class', "glow");
-    //cell.style.backgroundColor = "red";
     cell.addEventListener('mouseover', draw);
     cell.addEventListener('mousedown', draw)
     grid.appendChild(cell);
@@ -288,7 +313,9 @@ function draw(e){
 
 //reset the grid function
 function resetGrid(){
-
+    
+grid.innerHTML='';
+generateGrid(curGridSize);
 console.log('reset');
 }
 
@@ -299,7 +326,7 @@ window.onload=()=>{
     console.log("loaded");
 }
 
-console.log(userC + "color loaded");
+console.log(userC + "color loaded"+userGrdSize.value);
 
 
 
