@@ -186,8 +186,10 @@
 <script>
 
 const LOADGRIDSIZE = 16;
+const GridMax = 160;
 const LOADCELCOLOR = '#18D100';
 const LOADDRAWMODE = 'solid';
+let powerSupply = false;
 let curGridSize = LOADGRIDSIZE;
 let curCellColor= LOADCELCOLOR;
 let curDrawMode = LOADDRAWMODE;
@@ -198,10 +200,50 @@ const rando = document.getElementById('randoButton');
 const erase = document.getElementById('eraseButton');
 const reset = document.getElementById('resetButton');
 const userC = document.getElementById('colorSwatch').value;
+let lastNumber = LOADGRIDSIZE;
+
+
+
+const gridInput = document.getElementById('userGrdSize');
+
+gridInput.addEventListener('input', (e)=>{
+    console.log("g..." + e.target.value);
+    console.log("g..." + typeof(e.target.value));
+    console.log(verNum(e.target.value));
+   
+    if(typeof(e.target.value) === 'number' || verNum(e.target.value)){
+        if(e.target.value>0 && e.target.value<=GridMax){
+            updateGridSize(e.target.value);
+        
+        console.log("!")
+    }else{
+        console.log('fail and fix');
+        // gridInput.blur;
+        document.activeElement.blur();
+        gridInput.value=lastNumber;
+        updateGridSize(lastNumber);
+        userGrdSize.setAttribute('value',e.target.value);
+    }
+}
+    
+});
+
+// sense focus to set number
+gridInput.addEventListener('focus', (e)=>{
+
+    if(e.target.value>0 && e.target.value<=GridMax){
+        console.log(e.target.value);
+    }
+
+
+
+
+});
+
+
 let gSize = document.getElementById('userGrdSize').value;
 const upBut = document.getElementById('up');
 const dnBut = document.getElementById('down');
-
 
 
 
@@ -214,16 +256,30 @@ let ink = false;
 
 
 
+function verNum(str){  
+    regexp=/^[0-9]/
+    if (regexp.test(str)){
+        return true;
+   }else{
+       return false;   
+   }
+}
+
+
+
+
 
                                                             // POWER UP
 function powerUp(){
     if (grid.classList.contains('grid')) {
         grid.setAttribute('class', "glow");
     console.log("powering up");
+        powerSupply = true;
         hidden.style.opacity = 100;
     }else{
         grid.setAttribute('class', "grid");
     console.log("powering down");
+    powerSupply = false;
     hidden.style.opacity = 0;
     }
 }
@@ -240,10 +296,6 @@ function increaseByOne(value){
         return;
     }
 
-
-
-
-
 function decreaseByOne(value){
     let valueN = parseInt(value);
         let newValue = valueN - 1;
@@ -253,7 +305,12 @@ function decreaseByOne(value){
         updateGridSize(newValue);
         return;
 }
-                                                            // updates
+           
+
+
+
+
+// updates
 function updateGridSize(newSize){
         curGridSize = newSize;
 
@@ -311,6 +368,7 @@ function generateRandom(){
 }
 
 function draw(e){
+    if(powerSupply === false){console.log("no power"); return;};
     if(e.type === 'mouseover' && !ink){
         console.log("no ink");   
         return;
@@ -338,6 +396,7 @@ function resetGrid(){
     
 grid.innerHTML='';
 generateGrid(curGridSize);
+
 console.log('reset');
 }
 
@@ -352,7 +411,14 @@ console.log(userC + "color loaded"+userGrdSize.value);
 
 
 
+function punch(){
+    console.log("update punch list as possible");
+    console.log("reformat to modules?");
+    console.log("fix input listener to number");
+    console.log(".....?");
 
+
+}
 
 
 </script>
